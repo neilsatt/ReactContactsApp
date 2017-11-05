@@ -1,4 +1,5 @@
-import React, {Component} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 
 /*
    An expression - maps over the contacts in App.js 
@@ -10,7 +11,6 @@ import React, {Component} from 'react'
    - Add a key to each li item (gets rid of console error)
 */
 
-import React, { Component } from 'react'
 
 function ListContacts (props) {
   return (
@@ -29,8 +29,13 @@ function ListContacts (props) {
           </button>
         </li>
       ))}
-    </ol>cd c
+    </ol>
   )
 }
 
+ListContacts.PropTypes = {
+    contacts: PropTypes.array.isRequired,
+    onDeleteContact: PropTypes.func.isRequired
+
+}
 export default ListContacts
