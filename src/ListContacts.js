@@ -16,7 +16,7 @@ class ListContacts extends Component {
   updateQuery = (query) => {
     this.setState({ query: query.trim() })
   }
-  
+
   clearQuery = () => {
       this.setState ({ query: ''})
   }
@@ -27,20 +27,20 @@ class ListContacts extends Component {
   render() {
       const { contacts, onDeleteContact } = this.props
       const { query } = this.state
-      
-      let showingContacts 
+
+      let showingContacts
       if(query){
           const match = new RegExp(escapeRegExp(this.state.query),'i' )
           showingContacts = this.props.contacts.filter((contact) => match.test(contact.name) )
       }else {
-         showingContacts = contacts 
+         showingContacts = contacts
       }
-      
+
     showingContacts.sort(sortBy('name'))
-      
+
     return (
       <div className='list-contacts'>
-     
+
          {/* {JSON.stringify(this.state)}  - Write out test to page */}
 
         <div className='list-contacts-top'>
@@ -51,22 +51,27 @@ class ListContacts extends Component {
             value={this.state.query}
             onChange={(event) => this.updateQuery(event.target.value)}
           />
+          <a
+            href='#create'
+            onClick={this.props.onNavigate}
+            className='add-contact'
+          >Add Contact</a>
         </div>
-          
-          {/* 
-            showingContact length = 2 if you type in M 
+
+          {/*
+            showingContact length = 2 if you type in M
             contacts.length = 3
-          
-          
+
+
           */}
-          
+
           {showingContacts.length !== contacts.length &&  (
            <div className='showing-contacts'>
-            <span>Now showing {showingContacts.length} of {contacts.length} total</span>  
+            <span>Now showing {showingContacts.length} of {contacts.length} total</span>
             <button onClick={this.clearQuery}>Show all</button>
               </div>
           )}
-          
+
         <ol className='contact-list'>
           {showingContacts.map((contact) => (
             <li key={contact.id} className='contact-list-item'>

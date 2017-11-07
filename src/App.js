@@ -1,47 +1,40 @@
 import React, { Component } from 'react';
 import ListContacts from './ListContacts'
+import CreateContact from './CreateContact'
+import * as ContactsAPI from './utils/ContactsAPI'
 
-
-
-// Move contacts data into the component so that App will manage the state
-// Whenever state changes, React will know about it and update UI
 class App extends Component {
-    state = {
-        contacts: [
-          {
-            "id": "ryan",
-            "name": "Ryan Florence",
-            "email": "ryan@reacttraining.com",
-            "avatarURL": "http://localhost:5001/ryan.jpg"
-          },
-          {
-            "id": "michael",
-            "name": "Michael Jackson",
-            "email": "michael@reacttraining.com",
-            "avatarURL": "http://localhost:5001/michael.jpg"
-          },
-          {
-            "id": "tyler",
-            "name": "Tyler McGinnis",
-            "email": "tyler@reacttraining.com",
-            "avatarURL": "http://localhost:5001/tyler.jpg"
-          }
-        ]
-    }
-  // take in the specific contact that was clicked 
-  // then update state and remove contact
+  state = {
+    screen: 'list', // list, create
+    contacts: []
+  }
+  componentDidMount() {
+    ContactsAPI.getAll().then((contacts) => {
+      this.setState({ contacts })
+    })
+  }
   removeContact = (contact) => {
-      this.setState((state) => ({
-          contacts: state.contacts.filter((c) => c.id !== contact.id)
-      }))
+    this.setState((state) => ({
+      contacts: state.contacts.filter((c) => c.id !== contact.id)
+    }))
+
+    ContactsAPI.remove(contact)
   }
   render() {
     return (
-      <div>
-        <ListContacts 
-         onDeleteContact={this.removeContact}
-         contacts={this.state.contacts} 
-        />
+      <div className="app">
+        {this.state.screen === 'list' && (
+          <ListContacts
+            contacts={this.state.contacts}
+            onDeleteContact={this.removeContact}
+            onNavigate={() => {
+              this.setState({ screen: 'create' })
+            }}
+          />
+        )}
+        {this.state.screen === 'create' && (
+          <CreateContact/>
+        )}
       </div>
     )
   }
