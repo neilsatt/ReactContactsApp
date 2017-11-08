@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
@@ -18,59 +19,45 @@ class ListContacts extends Component {
   }
 
   clearQuery = () => {
-      this.setState ({ query: ''})
+    this.setState({ query: '' })
   }
 
-  // contacts that match a certain pattern
-  // check if user has entered a search query
-  // consts help clean up the code
   render() {
-      const { contacts, onDeleteContact } = this.props
-      const { query } = this.state
+    const { contacts, onDeleteContact } = this.props
+    const { query } = this.state
 
-      let showingContacts
-      if(query){
-          const match = new RegExp(escapeRegExp(this.state.query),'i' )
-          showingContacts = this.props.contacts.filter((contact) => match.test(contact.name) )
-      }else {
-         showingContacts = contacts
-      }
+    let showingContacts
+    if (query) {
+      const match = new RegExp(escapeRegExp(query), 'i')
+      showingContacts = contacts.filter((contact) => match.test(contact.name))
+    } else {
+      showingContacts = contacts
+    }
 
     showingContacts.sort(sortBy('name'))
 
     return (
       <div className='list-contacts'>
-
-         {/* {JSON.stringify(this.state)}  - Write out test to page */}
-
         <div className='list-contacts-top'>
           <input
             className='search-contacts'
             type='text'
             placeholder='Search contacts'
-            value={this.state.query}
+            value={query}
             onChange={(event) => this.updateQuery(event.target.value)}
           />
-          <a
-            href='#create'
-            onClick={this.props.onNavigate}
+          <Link
+            to='/create'
             className='add-contact'
-          >Add Contact</a>
+          >Add Contact</Link>
         </div>
 
-          {/*
-            showingContact length = 2 if you type in M
-            contacts.length = 3
-
-
-          */}
-
-          {showingContacts.length !== contacts.length &&  (
-           <div className='showing-contacts'>
+        {showingContacts.length !== contacts.length && (
+          <div className='showing-contacts'>
             <span>Now showing {showingContacts.length} of {contacts.length} total</span>
             <button onClick={this.clearQuery}>Show all</button>
-              </div>
-          )}
+          </div>
+        )}
 
         <ol className='contact-list'>
           {showingContacts.map((contact) => (
@@ -82,7 +69,7 @@ class ListContacts extends Component {
                 <p>{contact.name}</p>
                 <p>{contact.email}</p>
               </div>
-              <button onClick={() => this.props.onDeleteContact(contact)} className='contact-remove'>
+              <button onClick={() => onDeleteContact(contact)} className='contact-remove'>
                 Remove
               </button>
             </li>
